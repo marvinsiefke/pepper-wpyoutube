@@ -1,0 +1,94 @@
+.pepperyoutube {
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%;
+	background: #000000;
+	z-index: 0;
+}
+.pepperyoutube__cover {
+	position: absolute;
+	content: "";
+	background-size: cover;
+	background-position: center;
+	z-index: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	opacity: 0.25;
+	z-index: -1;
+}
+.pepperyoutube__consent {
+	position: absolute;
+	content: "";
+	z-index: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	color: white;
+	z-index: 1;
+	padding: 16px;
+	display: grid;
+}
+.pepperyoutube__consentInner {
+	margin: 0;
+	max-width: 400px;
+	font-size: .925em;
+}
+.pepperyoutube__consentBody {
+	letter-spacing: 0.0125em;
+	line-height: 1.25em;
+	margin: 0 0 16px 0;
+}
+.pepperyoutube__consentButton {
+	appearance: none;
+	-webkit-appearance: button;
+	border: none;
+	background: #FF0000;
+	color: #FFFFFF;
+	border-radius: 2px;
+	padding: 8px 16px;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: bold;
+	outline: 3px solid rgba(0,0,0,0);
+	transition: color 250ms ease, background 250ms ease, outline 250ms ease;
+}
+.pepperyoutube__consentButton:hover,
+.pepperyoutube__consentButton:focus {
+	background: #FFFFFF;
+	color: #FF0000;
+}
+.pepperyoutube__consentButton:active {
+	outline: 3px solid rgba(0,0,0,.33);
+}
+.pepperyoutube__video {
+	position: absolute;
+	content: "";
+	z-index: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	height: 100%;
+	width: 100%;
+}
+@media (min-width: 769px) {
+	.pepperyoutube__consent {
+		backdrop-filter: blur(4px);
+	}
+	.pepperyoutube__consentInner {
+		margin: auto;
+	}
+	.pepperyoutube__consent {
+		padding: 24px;
+		font-size: 1.125em;
+	}
+}
