@@ -10,3 +10,5 @@ GDPR-compliant YouTube embedding tool for WordPress. It provides a simple shortc
 - Maybe a TTL for the thumbnails in the cache.
 - Maybe a more flexible interpreting of the attribute in the shortcode, especially an possibility to pass the full URI, not only an ID. This could be more comfortable.
 - An option to save the consent in a cookie.
+
+There is no ETA or even a periodic development, but the plugin will grow with my wordpress projects.
