@@ -1,50 +1,73 @@
 <?php
 /**
  * Plugin Name: pepper Youtube
- * Description: GDPR-compliant YouTube Embedding Tool. Use it like this: [pepperyoutube id="SXHMnicI6Pg"]
+ * Description: GDPR-compliant YouTube Embedding Tool. Use it like this: [peppertube id="SXHMnicI6Pg"]
  * Version: 1.0
  * Author: pepper
  * Author URI: https://pepper.green
+ * Text Domain: pepperyoutube
+ * Domain Path: /languages
  */
 
-defined('ABSPATH') or die('No script kiddies please!');
+defined('ABSPATH') or die('Access denied');
 
-// Central Cache Directory
+
+// Configuration
 define('PEPPERYOUTUBE_CACHE_DIR', WP_CONTENT_DIR . '/cache/pepperyoutube/');
 
-// Assets
-function pepperyoutube_enqueue_scripts() {
-	// Registriert das JavaScript-File
-	wp_register_script('pepperyoutube-js', plugins_url('pepperyoutube.js', __FILE__), array(), null, true);
 
-	// Registriert das CSS-File
+// Load plugin textdomain for translations
+function pepperyoutube_load_textdomain() {
+	load_plugin_textdomain('pepperyoutube', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+add_action('plugins_loaded', 'pepperyoutube_load_textdomain');
+
+
+// Register js & css
+function pepperyoutube_enqueue_scripts() {
+	wp_register_script('pepperyoutube-js', plugins_url('pepperyoutube.js', __FILE__), array(), null, true);
 	wp_register_style('pepperyoutube-css', plugins_url('pepperyoutube.css', __FILE__));
 }
-
 add_action('wp_enqueue_scripts', 'pepperyoutube_enqueue_scripts');
+
+
+// Download thumbnail using cURL
+function pepperyoutube_download_thumbnail($url, $save_path) {
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	$data = curl_exec($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($http_code == 200 && $data !== false) {
+		file_put_contents($save_path, $data);
+		return true;
+	}
+
+	return false;
+}
 
 // Shortcode
 function pepperyoutube_shortcode($atts) {
-	$a = shortcode_atts(array(
-		'id' => ''
-	), $atts);
+	$attr = shortcode_atts(array('id' => ''), $atts);
 
-	if (empty($a['id'])) {
-		return '<p>Fehler: Keine Video-ID angegeben.</p>';
+	if (empty($attr['id'])) {
+		return '<p>' . __('Error: No video ID given.', 'pepperyoutube') . '</p>';
 	}
 
-	$video_id = esc_attr($a['id']);
+	$video_id = esc_attr($attr['id']);
 	$cached_file_path = PEPPERYOUTUBE_CACHE_DIR . $video_id . '.jpg';
 
-	// Prüfen, ob das Cover bereits gecacht ist, sonst herunterladen
+	// Check if the cover is already cached, otherwise download it
 	if (!file_exists($cached_file_path)) {
 		if (!is_dir(PEPPERYOUTUBE_CACHE_DIR)) {
 			mkdir(PEPPERYOUTUBE_CACHE_DIR, 0755, true);
 		}
+
 		$image_url = 'https://img.youtube.com/vi/' . $video_id . '/hqdefault.jpg';
-		$image_data = file_get_contents($image_url);
-		if ($image_data !== false) {
-			file_put_contents($cached_file_path, $image_data);
+		if (pepperyoutube_download_thumbnail($image_url, $cached_file_path) === false) {
+			return '<p>' . __('Error: Unable to download video cover.', 'pepperyoutube') . '</p>';
 		}
 	}
 
@@ -57,13 +80,12 @@ function pepperyoutube_shortcode($atts) {
 				<div class="pepperyoutube__cover" style="background-image: url(' . $cover_url . ');"></div>
 				<div class="pepperyoutube__consent">
 					<div class="pepperyoutube__consentInner">
-						<p class="pepperyoutube__consentBody"><strong>Zustimmung zur Nutzung von YouTube-Videos:</strong> Im erweiterten Datenschutzmodus setzt YouTube keine Cookies. Allerdings könnte die IP-Adresse an YouTube übertragen werden, sobald das Video geladen wird. Bitte bestätigen, ob das Video geladen werden darf:</p>
-						<button class="pepperyoutube__consentButton">Video über YouTube laden</button>
+						<p class="pepperyoutube__consentBody"><strong>' . __('Consent to use YouTube videos', 'pepperyoutube') . '</strong> ' . __('In enhanced privacy mode, YouTube does not set cookies. However, the IP address may be transmitted to YouTube once the video is loaded. Please confirm if the video may be loaded:', 'pepperyoutube') . '</p>
+						<button class="pepperyoutube__consentButton">' . __('Load video via YouTube', 'pepperyoutube') . '</button>
 					</div>
 				</div>
 			</div>';
 
 	return $html;
 }
-
-add_shortcode('pepperyoutube', 'pepperyoutube_shortcode');
+add_shortcode('peppertube', 'pepperyoutube_shortcode');
