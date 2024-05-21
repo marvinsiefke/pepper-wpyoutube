@@ -9,7 +9,7 @@ GDPR-compliant YouTube embedding tool for WordPress. It provides a simple shortc
 - Better styling options. There is only the constant `PEPPERYOUTUBE_LOAD_CSS` to load or not to load the default stylesheet so far.
 - Maybe a TTL for the thumbnails in the cache.
 - Maybe a more flexible interpreting of the attribute in the shortcode, especially an possibility to pass the full URI, not only an ID. This could be more comfortable.
-- Maybe a optimization of the code, rewritten in a class.
+- Maybe an optimization of the code, rewritten in a class.
 - An option to save the consent in a cookie.
 
 There is no ETA or even a periodic development, but the plugin will grow with my wordpress projects.
