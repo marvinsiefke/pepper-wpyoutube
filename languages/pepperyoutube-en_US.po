@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en_US\n"
+
+msgid "Error: No video ID given."
+msgstr "Error: No video ID given."
+
+msgid "Consent to use YouTube videos:"
+msgstr "Consent to use YouTube videos:"
+
+msgid "In enhanced privacy mode, YouTube does not set cookies. However, the IP address may be transmitted to YouTube once the video is loaded. Please confirm if the video may be loaded:"
+msgstr "In enhanced privacy mode, YouTube does not set cookies. However, the IP address may be transmitted to YouTube once the video is loaded. Please confirm if the video may be loaded:"
+
+msgid "Load video via YouTube"
+msgstr "Load video via YouTube"
