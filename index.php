@@ -11,10 +11,17 @@
 
 defined('ABSPATH') or die('Access denied');
 
-
 // Configuration
-define('PEPPERYOUTUBE_CACHE_DIR', WP_CONTENT_DIR . '/cache/pepperyoutube/');
+$constants = [
+	'PEPPERYOUTUBE_CACHE_DIR'	=> WP_CONTENT_DIR . '/cache/pepperyoutube/',
+	'PEPPERYOUTUBE_LOAD_CSS'	=> true
+];
 
+foreach ($constants as $key => $value) {
+	if (!defined($key)) {
+		define($key, $value);
+	}
+}
 
 // Load plugin textdomain for translations
 function pepperyoutube_load_textdomain() {
@@ -22,14 +29,12 @@ function pepperyoutube_load_textdomain() {
 }
 add_action('plugins_loaded', 'pepperyoutube_load_textdomain');
 
-
 // Register js & css
 function pepperyoutube_enqueue_scripts() {
 	wp_register_script('pepperyoutube-js', plugins_url('pepperyoutube.js', __FILE__), array(), null, true);
 	wp_register_style('pepperyoutube-css', plugins_url('pepperyoutube.css', __FILE__));
 }
 add_action('wp_enqueue_scripts', 'pepperyoutube_enqueue_scripts');
-
 
 // Download thumbnail using cURL
 function pepperyoutube_download_thumbnail($url, $save_path) {
@@ -74,7 +79,10 @@ function pepperyoutube_shortcode($atts) {
 	$cover_url = content_url('cache/pepperyoutube/' . $video_id . '.jpg');
 
 	wp_enqueue_script('pepperyoutube-js');
-	wp_enqueue_style('pepperyoutube-css');
+
+	if(PEPPERYOUTUBE_LOAD_CSS === true) {
+		wp_enqueue_style('pepperyoutube-css');
+	}
 
 	$html = '<div class="pepperyoutube" data-id="' . $video_id . '">
 				<div class="pepperyoutube__cover" style="background-image: url(' . $cover_url . ');"></div>
